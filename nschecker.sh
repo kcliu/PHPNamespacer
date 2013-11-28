@@ -3,7 +3,7 @@ rm -rf .nstmp
 mkdir -p .nstmp
 checkPath=('class' 'src/class' 'public' 'src/public')
 nsPath=('class' 'src/class' 'vendor/eztable/kernel/class')
-
+exitStatus=0
 #gen check list
 find ${checkPath[@]} 2> /dev/null| xargs awk '/^use/ {print substr($2, 0, length($2)-1)}' >> .nstmp/checklist.txt
 
@@ -21,6 +21,8 @@ do
     if grep -Fxq "$line" .nstmp/nstable.txt
     then :
     else
-        echo "$line not found"
+        echo "$line not found, please fix it and commit again"
+        exitStatus=1
     fi
 done < .nstmp/checklist.txt
+exit $exitStatus
